@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import Menu, Customer, Order, OrderItem, Payment, PaymentChoices, StockIngredient
+from .models import Menu, Customer, Order, OrderItem, Payment, PaymentChoices, StockIngredient, StaffAssignment, Staff
 
 # Create your views here.
 def index(request):
@@ -48,6 +48,22 @@ def show_customer_detail(request, customer_id):
         'customer_orders': customer_orders
     })
 
+# staff
+def show_staff(request):
+    staffs = Staff.objects.all()
+    return render(request, 'staff/show_staff.html', {
+        'staffs': staffs
+    })
+
+def show_staff_detail(request, staff_id):
+    staff = Staff.objects.get(id=staff_id)
+    # staff2 = staff.assigned_orders.all().first()
+    staff_assigneds = staff.assigned_orders.all()
+    print(staff_assigneds)
+    return render(request, 'staff/show_staff_detail.html', {
+        'staff': staff,
+        'staff_assigneds': staff_assigneds
+    })
 
 # order
 def show_order(request):

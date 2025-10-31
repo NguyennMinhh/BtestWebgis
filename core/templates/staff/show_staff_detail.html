@@ -22,25 +22,25 @@
     }
 </style>
 
-<h1>Thông tin khách hàng</h1>
+<h1>Thông tin nhân viên</h1>
 <table>
     <tr>
-        <th>Mã khách hàng</th>
+        <th>Mã nhân viên</th>
         <th>Họ tên</th>
+        <th>Chức vụ</th>
         <th>Số điện thoại</th>
-        <th>Địa chỉ</th>
-        <th>Hạng thành viên</th>
+        <th>Ca làm việc</th>
     </tr>
     <tr>
-        <td>{{ customer.ma_khach_hang }}</td>
-        <td>{{ customer.ho_ten }}</td>
-        <td>{{ customer.so_dien_thoai }}</td>
-        <td>{{ customer.dia_chi }}</td>
-        <td>{{ customer.hang_thanh_vien }}</td>
+        <td>{{ staff.ma_nhan_vien }}</td>
+        <td>{{ staff.ho_ten }}</td>
+        <td>{{ staff.chuc_vu }}</td>
+        <td>{{ staff.so_dien_thoai }}</td>
+        <td>{{ staff.ca_lam_viec }}</td>
     </tr>
 </table>
 
-<h1>Danh sách đơn hàng của {{ customer.ho_ten }}</h1>
+<h1>Danh sách đơn hàng của {{ staff.ho_ten }}</h1>
 <table>
     <tr>
         <th>Mã đơn hàng</th>
@@ -50,14 +50,14 @@
         <th>Phương thức thanh toán</th>
         <th>Thời gian đặt</th>
     </tr>
-    {% for order in customer_orders %}
+    {% for order in staff_assigneds %}
     <tr>
-        <td>{{ order.ma_don_hang }}</td>
-        <td>{{ order.customer.ho_ten }}</td>
-        <td>{{ order.tong_tien }}</td>
-        <td>{{ order.trang_thai }}</td>
-        <td>{{ order.phuong_thuc_thanh_toan }}</td>
-        <td>{{ order.thoi_gian_dat }}</td>
+        <td>{{ order.order.ma_don_hang }}</td>
+        <td>{{ order.order.customer.ho_ten }}</td>
+        <td>{{ order.order.tong_tien }}</td>
+        <td>{{ order.order.trang_thai }}</td>
+        <td>{{ order.order.phuong_thuc_thanh_toan }}</td>
+        <td>{{ order.order.thoi_gian_dat }}</td>
     </tr>
     {% endfor %}
 </table>

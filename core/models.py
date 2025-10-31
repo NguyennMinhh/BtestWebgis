@@ -66,7 +66,6 @@ class Order(models.Model):
         CANCELED = 'Đã hủy'
     ma_don_hang = models.CharField(max_length=10, unique=True)
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name='customer_orders')
-    # staff = models.ForeignKey(Staff, on_delete=models.CASCADE, related_name='staff_orders')
     thoi_gian_dat = models.DateTimeField(auto_now_add=True)
     tong_tien = models.FloatField()
     trang_thai = models.CharField(max_length=20, choices=TypeChoices.choices)
@@ -89,3 +88,31 @@ class OrderItem(models.Model):
 
     def __str__(self):
         return f"{self.menu.ten_mon} x{self.so_luong}"
+    
+# demo Staff
+class Staff(models.Model):
+    class JobChoices(models.TextChoices):
+        THUNGAN = 'Thu Ngân'
+        DAUBEP = 'Đầu Bếp'
+        PHUCVU = 'Phục Vụ'
+        QUANLY = 'Quản Lý'
+
+    class ShiftChoices(models.TextChoices):
+        MORNING = 'Sáng'
+        AFTERNOON = 'Chiều'
+        NIGHT = 'Tối'
+        MIDNIGHT = 'Đêm'
+
+    ma_nhan_vien = models.CharField(max_length=10, unique=True)
+    ho_ten = models.CharField(max_length=100)
+    chuc_vu = models.CharField(max_length=20, choices=JobChoices.choices)
+    so_dien_thoai = models.CharField(max_length=15)
+    ca_lam_viec = models.CharField(max_length=20, choices=ShiftChoices.choices)
+
+class StaffAssignment(models.Model):
+    staff = models.ForeignKey(Staff, on_delete=models.CASCADE, related_name='assigned_orders')
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='assigned_staffs')
+    def __str__(self):
+        return f"{self.staff.ho_ten} được phân công cho đơn {self.order.ma_don_hang}"
+
+    
