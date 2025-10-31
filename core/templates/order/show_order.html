@@ -1,0 +1,50 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+<style>
+    h1 {
+        text-align: center;
+        margin-top: 20px;
+    }
+    table {
+        border-collapse: collapse;
+        width: 80%;
+        margin: 20px auto;
+        text-align: center;
+        font-size: 16px;
+    }
+    th, td {
+        padding: 10px 15px;
+        border: 1px solid #888;
+    }
+    th {
+        background-color: #f2f2f2;
+    }
+</style>
+
+<div style="display: flex; justify-content: center; margin-top: 30px;">
+    <table border="1" style="text-align: center;">
+        <tr>
+            <th>Mã đơn hàng</th>
+            <th>Customer</th>
+            <th>Tổng tiền</th>
+            <th>Trạng thái</th>
+            <th>Phương thức thanh toán</th>
+            <th>Thời gian đặt</th>
+            <th>Xem thông tin khách hàng</th>
+        </tr>
+        {% for order in orders %}
+            <tr>
+                <td> {{order.ma_don_hang}} </td>
+                <td> {{order.customer.ho_ten}} </td>
+                <td> {{order.tong_tien}} </td>
+                <td> {{order.trang_thai}} </td>
+                <td> {{order.phuong_thuc_thanh_toan}} </td>
+                <td> {{order.thoi_gian_dat}} </td>
+                <td>
+                    <a href="{% url 'show_customer_detail' order.customer.id %}">Xem</a>
+                </td>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}

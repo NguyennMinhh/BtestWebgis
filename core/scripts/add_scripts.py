@@ -1,7 +1,15 @@
-from core.models import Menu, StockIngredient, MenuIngredient, Customer
+from core.models import Menu, StockIngredient, MenuIngredient, Customer, Order, Payment, PaymentChoices
 from django.utils import timezone
 
 def run():
+
+    Menu.objects.all().delete()
+    StockIngredient.objects.all().delete()
+    MenuIngredient.objects.all().delete()
+    Customer.objects.all().delete()
+    Order.objects.all().delete()
+    Payment.objects.all().delete()
+
     # ----- Tạo Menu -----
     menu1 = Menu.objects.create(
         ma_mon='BUR01',
@@ -62,28 +70,24 @@ def run():
         so_luong=0.5,
         don_vi_tinh=MenuIngredient.TypeChoices.KILOGRAM
     )
-
     MenuIngredient.objects.create(
         stock=bread,
         menu=menu1,
         so_luong=1,
         don_vi_tinh=MenuIngredient.TypeChoices.ITEM
     )
-
     MenuIngredient.objects.create(
         stock=bread,
         menu=menu2,
         so_luong=1,
         don_vi_tinh=MenuIngredient.TypeChoices.ITEM
     )
-
     MenuIngredient.objects.create(
         stock=pork,
         menu=menu2,
         so_luong=0.5,
         don_vi_tinh=MenuIngredient.TypeChoices.KILOGRAM
     )
-
     MenuIngredient.objects.create(
         stock=water,
         menu=menu3,
@@ -92,15 +96,14 @@ def run():
     )
 
     # ----- Tạo khách hàng mẫu -----
-    Customer.objects.create(
+    cus1 = Customer.objects.create(
         ma_khach_hang='CUS01',
         ho_ten='Nguyễn Văn A',
         so_dien_thoai='0901234567',
         dia_chi='Hà Nội',
         hang_thanh_vien=Customer.TypeChoices.NORMAL
     )
-
-    Customer.objects.create(
+    cus2 = Customer.objects.create(
         ma_khach_hang='CUS02',
         ho_ten='Trần Thị B',
         so_dien_thoai='0907654321',
@@ -108,4 +111,38 @@ def run():
         hang_thanh_vien=Customer.TypeChoices.VIP
     )
 
-    print("Dữ liệu mẫu đã được tạo thành công.")
+    # ----- Tạo đơn hàng mẫu -----
+    order1 = Order.objects.create(
+        ma_don_hang='ORD01',
+        customer=cus1,
+        tong_tien=menu1.gia_ban + menu3.gia_ban,
+        trang_thai=Order.TypeChoices.COMPLETED,
+        phuong_thuc_thanh_toan=PaymentChoices.CASH
+    )
+
+    order2 = Order.objects.create(
+        ma_don_hang='ORD02',
+        customer=cus2,
+        tong_tien=menu2.gia_ban * 2,
+        trang_thai=Order.TypeChoices.PENDING,
+        phuong_thuc_thanh_toan=PaymentChoices.CREDIT
+    )
+
+    # ----- Tạo thanh toán mẫu -----
+    Payment.objects.create(
+        ma_thanh_toan='PAY01',
+        ngay_thanh_toan=timezone.now(),
+        tong_tien=order1.tong_tien,
+        order=order1,
+        phuong_thuc_thanh_toan=PaymentChoices.CASH
+    )
+
+    Payment.objects.create(
+        ma_thanh_toan='PAY02',
+        ngay_thanh_toan=timezone.now(),
+        tong_tien=order2.tong_tien,
+        order=order2,
+        phuong_thuc_thanh_toan=PaymentChoices.CREDIT
+    )
+
+    print("Dữ liệu mẫu (Menu, Kho, Khách hàng, Đơn hàng, Thanh toán) đã được tạo thành công.")

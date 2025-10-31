@@ -1,0 +1,66 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+<style>
+    h1 {
+        text-align: center;
+        margin-top: 20px;
+    }
+    table {
+        border-collapse: collapse;
+        width: 80%;
+        margin: 20px auto;
+        text-align: center;
+        font-size: 16px;
+    }
+    th, td {
+        padding: 10px 15px;
+        border: 1px solid #888;
+    }
+    th {
+        background-color: #f2f2f2;
+    }
+</style>
+
+<h1>Thông tin {{stock.ten_nguyen_lieu}}</h1>
+<table>
+    <tr>
+        <th>Mã nguyên liệu</th>
+        <th>Tên nguyên liệu</th>
+        <th>Số lượng tồn kho</th>
+        <th>Chi phí nguyên liệu mỗi kg/item</th>
+        <th>Nhà cung cấp</th>
+    </tr>
+    <tr>
+            <td> {{stock.ma_nguyen_lieu}} </td>
+            <td> {{stock.ten_nguyen_lieu}} </td>
+            <td> {{stock.so_luong_ton_kho}} </td>
+            <td> {{stock.chi_phi_nguyen_lieu}} </td>
+            <td> {{stock.nha_cung_cap}} </td>
+    </tr>
+</table>
+
+<h1>Danh sách các món làm từ {{ stock.ten_nguyen_lieu }}</h1>
+<table>
+    <tr>
+            <th>Mã món</th>
+            <th>Tên món</th>
+            <th>Loại Món</th>
+            <th>Giá Bán</th>
+            <th>Đơn Vị Tính</th>
+    </tr>
+    {% for ingredient in related_ingredients %}
+    <tr>
+            <td> {{ingredient.menu.ma_mon}} </td>
+            <td> {{ingredient.menu.ten_mon}} </td>
+            <td> {{ingredient.menu.loai_mon}} </td>
+            <td> {{ingredient.menu.gia_ban}} </td>
+            <td> {{ingredient.menu.don_vi_tinh}} </td>
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="6"><i>Khách hàng này chưa có đơn hàng nào</i></td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

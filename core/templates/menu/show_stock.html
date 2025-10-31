@@ -1,0 +1,48 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+<style>
+    h1 {
+        text-align: center;
+        margin-top: 20px;
+    }
+    table {
+        border-collapse: collapse;
+        width: 80%;
+        margin: 20px auto;
+        text-align: center;
+        font-size: 16px;
+    }
+    th, td {
+        padding: 10px 15px;
+        border: 1px solid #888;
+    }
+    th {
+        background-color: #f2f2f2;
+    }
+</style>
+
+<div style="display: flex; justify-content: center; margin-top: 30px;">
+    <table border="1" style="text-align: center;">
+        <tr>
+            <th>Mã nguyên liệu</th>
+            <th>Tên nguyên liệu</th>
+            <th>Số lượng tồn kho</th>
+            <th>Chi phí nguyên liệu mỗi kg/item</th>
+            <th>Nhà cung cấp</th>
+            <th>Các món ăn đc sử dụng</th>
+        </tr>
+        {% for stock in stocks %}
+            <tr>
+                <td> {{stock.ma_nguyen_lieu}} </td>
+                <td> {{stock.ten_nguyen_lieu}} </td>
+                <td> {{stock.so_luong_ton_kho}} </td>
+                <td> {{stock.chi_phi_nguyen_lieu}} </td>
+                <td> {{stock.nha_cung_cap}} </td>
+                <td>
+                    <a href="{% url 'show_stock_detail' stock.id %}">Xem</a>
+                </td>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}

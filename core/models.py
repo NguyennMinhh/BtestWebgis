@@ -2,14 +2,14 @@ from django.db import models
 
 class Menu(models.Model):
     class TypeChoices(models.TextChoices):
-        BURGER = 'BUR', 'Burger'
-        DRINK = 'DRN', 'Drink'
-        COMBO = 'CMB', 'Combo'
-        SNACK = 'SNK', 'Snack'
+        BURGER = 'Burger'
+        DRINK = 'Drink'
+        COMBO = 'Combo'
+        SNACK = 'Snack'
 
     ma_mon = models.CharField(max_length=10, unique=True)
     ten_mon = models.CharField(max_length=50)
-    loai_mon = models.CharField(max_length=3, choices=TypeChoices.choices)
+    loai_mon = models.CharField(max_length=20, choices=TypeChoices.choices)
     gia_ban = models.FloatField()
     don_vi_tinh = models.CharField(max_length=10, default='VND')
 
@@ -28,28 +28,64 @@ class StockIngredient(models.Model):
 
 class MenuIngredient(models.Model):
     class TypeChoices(models.TextChoices):
-        KILOGRAM = 'KG', 'Kilogram'
-        ITEM = 'IT', 'Item'
+        KILOGRAM = 'Kilogram'
+        ITEM = 'Item'
 
     so_luong = models.FloatField()
-    don_vi_tinh = models.CharField(max_length=2, choices=TypeChoices.choices)
-    stock = models.ForeignKey(StockIngredient, on_delete=models.CASCADE, related_name='stock')
-    menu = models.ForeignKey(Menu, on_delete=models.CASCADE, related_name='menu')
+    don_vi_tinh = models.CharField(max_length=20, choices=TypeChoices.choices)
+    stock = models.ForeignKey(StockIngredient, on_delete=models.CASCADE, related_name='menu_ingredients')
+    menu = models.ForeignKey(Menu, on_delete=models.CASCADE, related_name='ingredients')
     def __str__(self):
         return f"{self.stock.ten_nguyen_lieu} dùng cho {self.menu.ten_mon}"
 
 
+# Demo
 class Customer(models.Model):
     class TypeChoices(models.TextChoices):
-        NORMAL = 'NRM', 'Normal'
-        VIP = 'VIP', 'VIP'
-        ONLINE = 'ONL', 'Online'
+        NORMAL = 'Normal'
+        VIP = 'VIP'
+        ONLINE = 'Online'
 
     ma_khach_hang = models.CharField(max_length=10, unique=True)
     ho_ten = models.CharField(max_length=200)
     so_dien_thoai = models.CharField(max_length=15)
     dia_chi = models.CharField(max_length=200)
-    hang_thanh_vien = models.CharField(max_length=3, choices=TypeChoices.choices)
+    hang_thanh_vien = models.CharField(max_length=20, choices=TypeChoices.choices)
 
     def __str__(self):
-        return self.ho_ten
+        return f"{self.ho_ten} ({self.hang_thanh_vien})"
+
+class PaymentChoices(models.TextChoices):
+    CASH = 'Tiền mặt'
+    CREDIT = 'Thẻ tín dụng'
+
+class Order(models.Model):
+    class TypeChoices(models.TextChoices):
+        PENDING = 'Đang xử lý'
+        COMPLETED = 'Đã hoàn thành'
+        CANCELED = 'Đã hủy'
+    ma_don_hang = models.CharField(max_length=10, unique=True)
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name='customer_orders')
+    # staff = models.ForeignKey(Staff, on_delete=models.CASCADE, related_name='staff_orders')
+    thoi_gian_dat = models.DateTimeField(auto_now_add=True)
+    tong_tien = models.FloatField()
+    trang_thai = models.CharField(max_length=20, choices=TypeChoices.choices)
+    phuong_thuc_thanh_toan = models.CharField(max_length=20, choices=PaymentChoices.choices)
+
+    def __str__(self):
+        return f"Đơn hàng {self.ma_don_hang} của {self.customer.ho_ten}"
+
+class Payment(models.Model):
+    ma_thanh_toan = models.CharField(max_length=10, unique=True)
+    ngay_thanh_toan = models.DateTimeField(auto_now_add=True)
+    tong_tien = models.FloatField()
+    order = models.OneToOneField(Order, on_delete=models.CASCADE, related_name='order_payments')
+    phuong_thuc_thanh_toan = models.CharField(max_length=20, choices=PaymentChoices.choices)
+
+class OrderItem(models.Model):
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items')
+    menu = models.ForeignKey(Menu, on_delete=models.CASCADE, related_name='order_items')
+    so_luong = models.PositiveIntegerField()
+
+    def __str__(self):
+        return f"{self.menu.ten_mon} x{self.so_luong}"

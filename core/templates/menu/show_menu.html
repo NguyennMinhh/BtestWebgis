@@ -1,0 +1,48 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+<style>
+    h1 {
+        text-align: center;
+        margin-top: 20px;
+    }
+    table {
+        border-collapse: collapse;
+        width: 80%;
+        margin: 20px auto;
+        text-align: center;
+        font-size: 16px;
+    }
+    th, td {
+        padding: 10px 15px;
+        border: 1px solid #888;
+    }
+    th {
+        background-color: #f2f2f2;
+    }
+</style>
+
+<div style="display: flex; justify-content: center; margin-top: 30px;">
+    <table border="1" style="text-align: center;">
+        <tr>
+            <th>Mã món</th>
+            <th>Tên món</th>
+            <th>Loại Món</th>
+            <th>Giá Bán</th>
+            <th>Đơn Vị Tính</th>
+            <th>Xem Nguyên liệu</th>
+        </tr>
+        {% for dish in menus %}
+            <tr>
+                <td> {{dish.ma_mon}} </td>
+                <td> {{dish.ten_mon}} </td>
+                <td> {{dish.loai_mon}} </td>
+                <td> {{dish.gia_ban}} </td>
+                <td> {{dish.don_vi_tinh}} </td>
+                <td>
+                    <a href="{% url 'show_menu_detail' dish.id %}">Nguyên liệu</a>
+                </td>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}

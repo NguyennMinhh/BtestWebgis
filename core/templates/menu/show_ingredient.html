@@ -1,0 +1,48 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+<style>
+    h1 {
+        text-align: center;
+        margin-top: 20px;
+    }
+    table {
+        border-collapse: collapse;
+        width: 80%;
+        margin: 20px auto;
+        text-align: center;
+        font-size: 16px;
+    }
+    th, td {
+        padding: 10px 15px;
+        border: 1px solid #888;
+    }
+    th {
+        background-color: #f2f2f2;
+    }
+</style>
+
+<div style="display: flex; justify-content: center; margin-top: 30px;">
+    <table border="1" style="text-align: center;">
+        <tr>
+            <th>Mã nguyên liệu</th>
+            <th>Số lượng</th>
+            <th>Tên nguyên liệu</th>
+            <th>Menu</th>
+            <th>Hàng Tồn</th>
+            <th>Chi phí nguyên liệu</th>
+            <th>Nhà cung cấp</th>
+        </tr>
+        {% for ingredient in ingredients %}
+            <tr>
+                <td> {{ ingredient.stock.ma_nguyen_lieu }}</td>
+                <td> {{ ingredient.so_luong }} {{ ingredient.don_vi_tinh }}</td>
+                <td> {{ ingredient.stock.ten_nguyen_lieu }} </td>
+                <td> {{ ingredient.menu.ten_mon }} </td>
+                <td> {{ ingredient.stock.so_luong_ton_kho }} {{ ingredient.don_vi_tinh }}</td>
+                <td> {{ ingredient.stock.chi_phi_nguyen_lieu }} / {{ ingredient.don_vi_tinh }}</td>
+                <td> {{ ingredient.stock.nha_cung_cap }}</td>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}
