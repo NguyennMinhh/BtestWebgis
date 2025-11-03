@@ -2,7 +2,6 @@ from django.urls import path, include
 from . import views
 
 urlpatterns = [
-    path('', views.index, name='index'),
     # Menu
     path('menu/', views.show_menu, name='show_menu'),
     path('menu/<int:menu_id>', views.show_menu_detail, name='show_menu_detail'),
@@ -19,4 +18,13 @@ urlpatterns = [
 
     # Order
     path('order/', views.show_order, name='show_order'),
+    path('order/<int:order_id>', views.show_order_detail, name='show_order_detail'),
+
+    # Tính năng
+    path('', views.core, name='core'),
+    # path('core/create/', views.create, name='create'),
+    path('create/order', views.create_order, name='create_order'),
+    path('create/order/<int:order_id>/', views.add_dishes, name='add_dishes'),
+    path('create/order/<int:order_id>/staff/', views.assign_staff, name='assign_staff'),
+    path('create/order/<int:order_id>/staff/payment/', views.payment_check, name='payment_check'),
 ]

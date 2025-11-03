@@ -1,0 +1,66 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+<style>
+    h1 {
+        text-align: center;
+        margin-top: 20px;
+    }
+    table {
+        border-collapse: collapse;
+        width: 80%;
+        margin: 20px auto;
+        text-align: center;
+        font-size: 16px;
+    }
+    th, td {
+        padding: 10px 15px;
+        border: 1px solid #888;
+    }
+    th {
+        background-color: #f2f2f2;
+    }
+</style>
+<h1> Danh sách món ăn đã thêm</h1>
+<table border="1" style="text-align: center;">
+    <tr>
+        <th>ID</th>
+        <th>Mã đơn hàng</th>
+        <th>Tên món</th>
+        <th>Số lượng</th>
+    </tr>
+    {% for menu in menu_items %}
+        <tr>
+            <td>{{ menu.id }}</td>
+            <td>{{ menu.order.ma_don_hang }}</td>
+            <td>{{ menu.menu.ten_mon }}</td>
+            <td>{{ menu.so_luong }}</td>
+        </tr>
+    {% endfor %}
+</table>
+
+
+<div>
+    <h2 style="text-align: center;">Thêm đơn hàng số {{ order_id }}: {{ order.ma_don_hang }}</h2>
+    {% for staff in staffs_assigned %}
+        <p style="text-align: center;"> - Nhân viên: {{ staff.staff.ho_ten }} - Vai trò: {{ staff.staff.chuc_vu }}</p>
+    {% endfor %}
+    <!-- {{ staffs_assigned }} -->
+    <form method="POST" style="text-align: center;">
+        {% csrf_token %}
+        <input type="hidden" name="order" value="{{ order.id }}">
+        {{ form.as_p }}
+        <button type="submit">Gán nhiệm vụ cho staff</button>
+    </form>
+</div>
+<br><br><br>
+<div>
+    <h2 style="text-align: center;">Giao nhiệm vụ cho staff</h2>
+    <form method="POST" action="{% url 'payment_check' order_id=order.id %}" style="text-align: center;">
+        {% csrf_token %}
+        <button type="submit">Hoàn tất giao nhiệm vụ</button>
+    </form>
+</div>
+
+
+{% endblock %}

@@ -1,0 +1,47 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+<style>
+    h1 {
+        text-align: center;
+        margin-top: 20px;
+    }
+    table {
+        border-collapse: collapse;
+        width: 80%;
+        margin: 20px auto;
+        text-align: center;
+        font-size: 16px;
+    }
+    th, td {
+        padding: 10px 15px;
+        border: 1px solid #888;
+    }
+    th {
+        background-color: #f2f2f2;
+    }
+</style>
+
+<div>
+    <h2 style="text-align: center;">Thêm đơn hàng số {{ order_id }}: {{ order.ma_don_hang }}</h2>
+    {% for order in order_items %}
+        <p style="text-align: center;"> - Món: {{ order.menu.ten_mon }} - Số lượng: {{ order.so_luong }}</p>
+    {% endfor %}
+    <form method="POST" style="text-align: center;">
+        {% csrf_token %}
+        <input type="hidden" name="order" value="{{ order.id }}">
+        {{ form.as_p }}
+        <button type="submit">Thêm món</button>
+    </form>
+</div>
+<br><br><br>
+<div>
+    <h2 style="text-align: center;">Hoàn tất đơn hàng</h2>
+    <form method="POST" action="{% url 'assign_staff' order_id=order.id %}" style="text-align: center;">
+        {% csrf_token %}
+        <button type="submit">Hoàn tất đơn hàng</button>
+    </form>
+</div>
+
+
+{% endblock %}

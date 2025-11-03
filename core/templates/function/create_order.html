@@ -1,0 +1,33 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+<style>
+    h1 {
+        text-align: center;
+        margin-top: 20px;
+    }
+    table {
+        border-collapse: collapse;
+        width: 80%;
+        margin: 20px auto;
+        text-align: center;
+        font-size: 16px;
+    }
+    th, td {
+        padding: 10px 15px;
+        border: 1px solid #888;
+    }
+    th {
+        background-color: #f2f2f2;
+    }
+</style>
+
+<div>
+    <h2 style="text-align: center;">Thêm đơn hàng</h2>
+    <form method="POST" style="text-align: center;">
+        {% csrf_token %}
+        {{ OrderForm.as_p }}
+        <button type="submit">Thêm nhân viên</button>
+    </form>
+</div>
+{% endblock %}

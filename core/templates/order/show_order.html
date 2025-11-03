@@ -32,6 +32,7 @@
             <th>Phương thức thanh toán</th>
             <th>Thời gian đặt</th>
             <th>Xem thông tin khách hàng</th>
+            <th>Xem chi tiết đơn hàng</th>
         </tr>
         {% for order in orders %}
             <tr>
@@ -43,6 +44,9 @@
                 <td> {{order.thoi_gian_dat}} </td>
                 <td>
                     <a href="{% url 'show_customer_detail' order.customer.id %}">Xem</a>
+                </td>
+                <td>
+                    <a href="{% url 'show_order_detail' order.id %}">Xem</a>
                 </td>
         {% endfor %}
     </table>

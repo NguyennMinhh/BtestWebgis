@@ -67,7 +67,7 @@ class Order(models.Model):
     ma_don_hang = models.CharField(max_length=10, unique=True)
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name='customer_orders')
     thoi_gian_dat = models.DateTimeField(auto_now_add=True)
-    tong_tien = models.FloatField()
+    tong_tien = models.FloatField(null=True, blank=True)
     trang_thai = models.CharField(max_length=20, choices=TypeChoices.choices)
     phuong_thuc_thanh_toan = models.CharField(max_length=20, choices=PaymentChoices.choices)
 
@@ -78,8 +78,11 @@ class Payment(models.Model):
     ma_thanh_toan = models.CharField(max_length=10, unique=True)
     ngay_thanh_toan = models.DateTimeField(auto_now_add=True)
     tong_tien = models.FloatField()
-    order = models.OneToOneField(Order, on_delete=models.CASCADE, related_name='order_payments')
+    order = models.OneToOneField(Order, on_delete=models.CASCADE, related_name='order_payment')
     phuong_thuc_thanh_toan = models.CharField(max_length=20, choices=PaymentChoices.choices)
+
+    def __str__(self):
+        return f"Thanh toán {self.ma_thanh_toan} cho đơn {self.order.ma_don_hang}"
 
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items')
@@ -87,7 +90,7 @@ class OrderItem(models.Model):
     so_luong = models.PositiveIntegerField()
 
     def __str__(self):
-        return f"{self.menu.ten_mon} x{self.so_luong}"
+        return f"id: {self.id}, order_id: {self.order.ma_don_hang}, món:{self.menu.ten_mon} x{self.so_luong}"
     
 # demo Staff
 class Staff(models.Model):
@@ -108,6 +111,8 @@ class Staff(models.Model):
     chuc_vu = models.CharField(max_length=20, choices=JobChoices.choices)
     so_dien_thoai = models.CharField(max_length=15)
     ca_lam_viec = models.CharField(max_length=20, choices=ShiftChoices.choices)
+    def __str__(self):
+        return f"{self.ho_ten} - {self.chuc_vu} - "
 
 class StaffAssignment(models.Model):
     staff = models.ForeignKey(Staff, on_delete=models.CASCADE, related_name='assigned_orders')

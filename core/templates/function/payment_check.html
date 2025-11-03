@@ -1,0 +1,95 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+<style>
+    h1 {
+        text-align: center;
+        margin-top: 20px;
+    }
+    table {
+        border-collapse: collapse;
+        width: 80%;
+        margin: 20px auto;
+        text-align: center;
+        font-size: 16px;
+    }
+    th, td {
+        padding: 10px 15px;
+        border: 1px solid #888;
+    }
+    th {
+        background-color: #f2f2f2;
+    }
+</style>
+
+<h1> Đơn hàng của khách: {{ customer.ho_ten }}</h1>
+<table border="1" style="text-align: center;">
+    <tr>
+        <th>ID</th>
+        <th>Mã khách hàng</th>
+        <th>Tên khách hàng</th>
+        <th>Số điện thoại</th>
+        <th>Địa chỉ</th>
+        <th>Hạng thành viên</th>
+    </tr>
+    <tr>
+        <td>{{ customer.id }}</td>
+        <td>{{ customer.ma_khach_hang }}</td>
+        <td>{{ customer.ho_ten }}</td>
+        <td>{{ customer.so_dien_thoai }}</td>
+        <td>{{ customer.dia_chi }}</td>
+        <td>{{ customer.hang_thanh_vien }}</td>
+    </tr>
+</table>
+
+<h1> Danh sách món ăn đã thêm</h1>
+<table border="1" style="text-align: center;">
+    <tr>
+        <th>ID</th>
+        <th>Mã đơn hàng</th>
+        <th>Tên món</th>
+        <th>Số lượng</th>
+    </tr>
+    {% for menu in menu_items %}
+        <tr>
+            <td>{{ menu.id }}</td>
+            <td>{{ menu.order.ma_don_hang }}</td>
+            <td>{{ menu.menu.ten_mon }}</td>
+            <td>{{ menu.so_luong }}</td>
+            <!-- <td>{{ menu.menu.gia_ban }} * {{ menu.so_luong }}</td> -->
+        </tr>
+    {% endfor %}
+    <tr>
+        <td colspan="4">
+            <strong>Tổng cộng: {{ total_price }} VND</strong>
+        </td>
+    </tr>
+</table>
+
+<h1> Danh sách nhân viên làm</h1>
+<table border="1" style="text-align: center;">
+    <tr>
+        <th>ID</th>
+        <th>Tên nhân viên</th>
+        <th>Chức vụ</th>
+    </tr>
+    {% for staff in staffs_assigned %}
+        <tr>
+            <td>{{ staff.staff.id }}</td>
+            <td>{{ staff.staff.ho_ten }}</td>
+            <td>{{ staff.staff.chuc_vu }}</td>
+        </tr>
+    {% endfor %}
+    <!-- {{ staffs_assigned}} -->
+</table>
+
+<div>
+    <h2 style="text-align: center;">Xác nhận thanh toán</h2>
+    <form method="POST" action="{% url 'payment_check' order_id=order.id %}" style="text-align: center;">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Xác nhận</button>
+    </form>
+</div>
+
+{% endblock %}
