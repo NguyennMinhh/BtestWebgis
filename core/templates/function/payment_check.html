@@ -50,13 +50,13 @@
         <th>Tên món</th>
         <th>Số lượng</th>
     </tr>
-    {% for menu in menu_items %}
+    {% for order_item in order_items %}
         <tr>
-            <td>{{ menu.id }}</td>
-            <td>{{ menu.order.ma_don_hang }}</td>
-            <td>{{ menu.menu.ten_mon }}</td>
-            <td>{{ menu.so_luong }}</td>
-            <!-- <td>{{ menu.menu.gia_ban }} * {{ menu.so_luong }}</td> -->
+            <td>{{ order_item.id }}</td>
+            <td>{{ order_item.order.ma_don_hang }}</td>
+            <td>{{ order_item.menu.ten_mon }}</td>
+            <td>{{ order_item.so_luong }}</td>
+            <!-- <td>{{ order_item.menu.gia_ban }} * {{ order_item.so_luong }}</td> -->
         </tr>
     {% endfor %}
     <tr>

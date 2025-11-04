@@ -106,6 +106,7 @@ def create_order(request):
     })
 
 def add_dishes(request, order_id):
+    order = Order.objects.get(id=order_id)
     if request.method == 'POST':
         form = OrderItemForm(request.POST)
         if form.is_valid():
@@ -114,11 +115,11 @@ def add_dishes(request, order_id):
             order_item.save()
             order_items = OrderItem.objects.filter(order_id=order_id)
             return render(request, 'function/add_dishes.html', {
-                'order_id': order_id, 
+                'order_id': order_id,
+                'order': order,
                 'order_items': order_items,
                 'form': OrderItemForm()
             })
-    order = Order.objects.get(id=order_id)
     form = OrderItemForm()
     return render(request, 'function/add_dishes.html', {
         'order_id': order_id, 
@@ -153,16 +154,15 @@ def assign_staff(request, order_id):
 
 def payment_check(request, order_id):
     order = Order.objects.get(id=order_id)
-    menu_items = OrderItem.objects.filter(order_id=order_id)
+    order_items = OrderItem.objects.filter(order_id=order_id)
     staffs_assigned = StaffAssignment.objects.filter(order_id=order_id)
     customer = order.customer
 
     total_price = 0
-    for item in menu_items:
+    for item in order_items:
         total_price += float(item.menu.gia_ban) * float(item.so_luong)
     order.tong_tien = total_price
     order.save()
-
     form = PaymentForm()
 
     if request.method == 'POST':
@@ -175,12 +175,27 @@ def payment_check(request, order_id):
             payment.save()
             order.trang_thai = Order.TypeChoices.COMPLETED
             order.save()
+            
+            # Demo: trừ nguyên liệu trong stock
+            for order_item in order_items:
+                menu = order_item.menu
+                menu_ingredients = menu.ingredients.all()
+                for menu_ingredient in menu_ingredients:
+                    ingredient_stock = menu_ingredient.stock
+                    modified_ingredient_stock = ingredient_stock.so_luong_ton_kho - (menu_ingredient.so_luong * order_item.so_luong)
+                    ingredient_stock.so_luong_ton_kho = modified_ingredient_stock
+                    used_ingredient = ingredient_stock.used + (menu_ingredient.so_luong * order_item.so_luong)
+                    ingredient_stock.used = used_ingredient
+                    ingredient_stock.save()
+                    print(ingredient_stock.used)
+                    
+            return redirect('show_order')
     return render(request, 'function/payment_check.html', {
         'order': order,
-        'menu_items': menu_items,
+        'order_items': order_items,
         'staffs_assigned': staffs_assigned,
         'total_price': total_price,
-        'customer': customer, 
+        'customer': customer,
         'form': form
     })
 
@@ -200,7 +215,7 @@ def show_order_detail(request, order_id):
     })
 
 def report(request):
-    # Theo dõi món ăn đã phục vụ:
+    # 1. Theo dõi món ăn đã phục vụ:
     menus = Menu.objects.all()
     menu_counts = {}
     for menu in menus:
@@ -220,7 +235,7 @@ def report(request):
     for key in sorted(menu_counts, key=menu_counts.get, reverse=True):
         sorted_menu_counts[key] = menu_counts[key]
 
-    # Theo dõi năng suất của nhân viên:
+    # 2. Theo dõi năng suất của nhân viên:
     staffs = Staff.objects.all()
     staff_productivities = {}
     for staff in staffs:
@@ -236,7 +251,11 @@ def report(request):
     for staff_assigment in finished_staff_assignments:
         staff_productivities[staff_assigment.staff.ho_ten] += 1
 
+    # 3. Theo dõi nguyên liệu:
+    stocks = StockIngredient.objects.all()
+
     return render(request, 'report/report.html', {
         'menu_counts': sorted_menu_counts,
         'staff_productivities': staff_productivities,
+        'stocks': stocks
     })

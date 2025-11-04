@@ -28,6 +28,7 @@
             <th>Mã nguyên liệu</th>
             <th>Tên nguyên liệu</th>
             <th>Số lượng tồn kho</th>
+            <th>Số lượng đã bán</th>
             <th>Chi phí nguyên liệu mỗi kg/item</th>
             <th>Nhà cung cấp</th>
             <th>Các món ăn đc sử dụng</th>
@@ -36,7 +37,8 @@
             <tr>
                 <td> {{stock.ma_nguyen_lieu}} </td>
                 <td> {{stock.ten_nguyen_lieu}} </td>
-                <td> {{stock.so_luong_ton_kho}} </td>
+                <td> {{stock.so_luong_ton_kho}} (Kg hoặc Item)</td>
+                <td> {{stock.used}} (Kg hoặc Item)</td>
                 <td> {{stock.chi_phi_nguyen_lieu}} </td>
                 <td> {{stock.nha_cung_cap}} </td>
                 <td>

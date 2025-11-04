@@ -22,6 +22,7 @@ class StockIngredient(models.Model):
     so_luong_ton_kho = models.FloatField()
     chi_phi_nguyen_lieu = models.FloatField()
     nha_cung_cap = models.CharField(max_length=100)
+    used = models.FloatField(default=0)
     def __str__(self):
         return f"{self.ten_nguyen_lieu} ({self.so_luong_ton_kho})"
 
