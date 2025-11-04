@@ -21,6 +21,12 @@
         background-color: #f2f2f2;
     }
 </style>
+<h1>Thêm stock mới: </h1>
+<form method="post" style="text-align: center;">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Thêm stock mới</button>
+</form>
 
 <div style="display: flex; justify-content: center; margin-top: 30px;">
     <table border="1" style="text-align: center;">
@@ -31,6 +37,7 @@
             <th>Số lượng đã bán</th>
             <th>Chi phí nguyên liệu mỗi kg/item</th>
             <th>Nhà cung cấp</th>
+            <th>Cấp thêm hàng</th>
             <th>Các món ăn đc sử dụng</th>
         </tr>
         {% for stock in stocks %}
@@ -41,6 +48,9 @@
                 <td> {{stock.used}} (Kg hoặc Item)</td>
                 <td> {{stock.chi_phi_nguyen_lieu}} </td>
                 <td> {{stock.nha_cung_cap}} </td>
+                <td> 
+                    <a href="{% url 'add_stock' stock.id %}">Cấp thêm hàng</a>
+                </td>
                 <td>
                     <a href="{% url 'show_stock_detail' stock.id %}">Xem</a>
                 </td>

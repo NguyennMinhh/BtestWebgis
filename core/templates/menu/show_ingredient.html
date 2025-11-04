@@ -22,6 +22,13 @@
     }
 </style>
 
+<h1>Thêm nguyên liệu vào món {{ dish.ten_mon }}: </h1>
+<form method="POST" style="text-align: center;">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit">
+</form>
+
 <div style="display: flex; justify-content: center; margin-top: 30px;">
     <table border="1" style="text-align: center;">
         <tr>
@@ -32,6 +39,7 @@
             <th>Hàng Tồn</th>
             <th>Chi phí nguyên liệu</th>
             <th>Nhà cung cấp</th>
+            <th>Xoá nguyên liệu</th>
         </tr>
         {% for ingredient in ingredients %}
             <tr>
@@ -42,6 +50,9 @@
                 <td> {{ ingredient.stock.so_luong_ton_kho }} {{ ingredient.don_vi_tinh }}</td>
                 <td> {{ ingredient.stock.chi_phi_nguyen_lieu }} / {{ ingredient.don_vi_tinh }}</td>
                 <td> {{ ingredient.stock.nha_cung_cap }}</td>
+                <td>
+                    <a href="{% url 'delete_menu_ingredient' ingredient.id %}"> Xoá </a>
+                </td>
         {% endfor %}
     </table>
 </div>

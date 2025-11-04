@@ -1,0 +1,13 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+<h1>
+  Bạn có chắc muốn xoá nguyên liệu {{ ingredient.stock.ten_nguyen_lieu }} này khỏi công thức chứ?
+</h1>
+
+<form method="post" style="text-align:center;">
+  {% csrf_token %}
+  <button type="submit" name="ket_qua" value="yes"">Xoá!</button>
+  <button type="submit" name="ket_qua" value="no"">Hay là thôi</button>
+</form>
+{% endblock %}

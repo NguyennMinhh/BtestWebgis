@@ -1,0 +1,10 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+<h1>Nhập số lượng hàng muốn nhập</h1>
+<form method="post">
+    {% csrf_token %}
+    <input type="number" name="amount_adding">
+    <button type="submit">Add</button>
+</form>
+{% endblock %}

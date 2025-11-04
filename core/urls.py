@@ -5,8 +5,10 @@ urlpatterns = [
     # Menu
     path('menu/', views.show_menu, name='show_menu'),
     path('menu/<int:menu_id>', views.show_menu_detail, name='show_menu_detail'),
+    path('menu/<int:ingredient_id>/delete', views.delete_menu_ingredient, name='delete_menu_ingredient'),
     path('stock/', views.show_stock, name='show_stock'),
     path('stock/<int:stock_id>', views.show_stock_detail, name='show_stock_detail'),
+    path('stock/<int:stock_id>/add', views.add_stock, name='add_stock'),
 
     # Customer
     path('customer/', views.show_customer, name='show_customer'),

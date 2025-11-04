@@ -1,8 +1,8 @@
 from datetime import datetime
 from django.shortcuts import redirect, render
-from .models import Menu, Customer, Order, OrderItem, Payment, PaymentChoices, StockIngredient, StaffAssignment, Staff
+from .models import Menu, Customer, Order, OrderItem, Payment, PaymentChoices, StockIngredient, StaffAssignment, Staff, MenuIngredient
 
-from .forms import CustomerForm, StaffForm, OrderForm, OrderItemForm, StaffAssignmentForm, PaymentForm
+from .forms import CustomerForm, StaffForm, OrderForm, OrderItemForm, StaffAssignmentForm, PaymentForm, MenuForm, MenuIngredientForm, StockForm
 
 # Create your views here.
 def index(request):
@@ -10,22 +10,61 @@ def index(request):
 
 # menu - ingredient - stocck
 def show_menu(request):
+    if request.method  == 'POST':
+        form = MenuForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('show_menu')
     menus = Menu.objects.all()
+    form = MenuForm()
     return render(request, 'menu/show_menu.html', {
-        'menus': menus 
+        'menus': menus,
+        'form': form,
     })
 
 def show_menu_detail(request, menu_id):
     dish = Menu.objects.get(id=menu_id)
     ingredients = dish.ingredients.all()
+    form = MenuIngredientForm()
+    if request.method == 'POST':
+        form = MenuIngredientForm(request.POST)
+        if form.is_valid():
+            menu_ingredient = form.save(commit=False)
+            menu_ingredient.menu = dish
+            menu_ingredient.save()
+        return redirect('show_menu_detail', menu_id=menu_id)
     return render(request, 'menu/show_ingredient.html', {
-        'ingredients': ingredients
+        'ingredients': ingredients,
+        'form': form,
+        'dish': dish
     })
 
+def delete_menu_ingredient(request, ingredient_id):
+    ingredient = MenuIngredient.objects.get(id=ingredient_id)
+    if request.method == 'POST':
+        ket_qua = request.POST.get("ket_qua")
+        menu_id = ingredient.menu.id
+        if ket_qua == 'yes':
+            ingredient.delete()
+            return redirect("show_menu_detail", menu_id=menu_id)
+        else:
+            return redirect("show_menu_detail", menu_id=menu_id)
+    return render(request, 'menu/delete_menu_ingredient.html', {
+        'ingredient': ingredient
+    })
+
+
 def show_stock(request):
+    if request.method == 'POST':
+        form = StockForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('show_stock')
+    form = StockForm()
     stocks = StockIngredient.objects.all()
     return render(request, 'menu/show_stock.html', {
-        'stocks': stocks
+        'stocks': stocks, 
+        'form': form
     })
 
 def show_stock_detail(request, stock_id):
@@ -35,6 +74,18 @@ def show_stock_detail(request, stock_id):
         'stock': stock, 
         'related_ingredients': related_ingredients
     })
+
+def add_stock(request, stock_id):
+    stock = StockIngredient.objects.get(id=stock_id)
+    if request.method == 'POST':
+        amount_adding = request.POST.get('amount_adding')
+        stock.so_luong_ton_kho += float(amount_adding)
+        stock.save()
+        return redirect('show_stock')
+    return render(request, 'menu/add_stock.html', {
+        'stock': stock, 
+    })
+
 
 # customer
 def show_customer(request):
@@ -176,7 +227,7 @@ def payment_check(request, order_id):
             order.trang_thai = Order.TypeChoices.COMPLETED
             order.save()
             
-            # Demo: trừ nguyên liệu trong stock
+            # Demo: trừ nguyên liệu trong stock.so_luong_ton_kho, và thêm nguyên liệu vào stock.used 
             for order_item in order_items:
                 menu = order_item.menu
                 menu_ingredients = menu.ingredients.all()

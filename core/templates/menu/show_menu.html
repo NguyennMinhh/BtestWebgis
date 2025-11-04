@@ -22,6 +22,32 @@
     }
 </style>
 
+<div>
+    <h2 style="text-align: center;">Thêm món ăn mới</h2>
+    <form method="POST" style="text-align: center;">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Tạo</button>
+    </form>
+</div>
+
+<script>
+    function addIngredientSlot() {
+        const container = document.getElementById('ingredients-container');
+        const new_slot = document.createElement('div')
+        new_slot.classList.add('ingredient-row');
+        new_slot.innerHTML=`
+            <select name="ingredient">
+                {% for ingredient in ingredients %}
+                    <option value="{{ ingredient }}"> {{ingredient.ten_nguyen_lieu}} </option>
+                {% endfor %}
+            </select>
+            <input type="number" placeholder="Số lượng" id="{{ingredient.ma_nguyen_lieu}}">
+        `;
+        container.appendChild(new_slot);
+    }
+</script>
+
 <div style="display: flex; justify-content: center; margin-top: 30px;">
     <table border="1" style="text-align: center;">
         <tr>

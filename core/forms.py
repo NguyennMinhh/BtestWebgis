@@ -30,3 +30,18 @@ class PaymentForm(forms.ModelForm):
     class Meta:
         model = Payment
         fields = ['ma_thanh_toan', 'phuong_thuc_thanh_toan']
+
+class MenuForm(forms.ModelForm):
+    class Meta:
+        model = Menu
+        fields = ['ma_mon', 'ten_mon', 'loai_mon', 'gia_ban']
+
+class MenuIngredientForm(forms.ModelForm):
+    class Meta:
+        model = MenuIngredient
+        fields = ['stock', 'so_luong', 'don_vi_tinh']
+
+class StockForm(forms.ModelForm):
+    class Meta:
+        model = StockIngredient
+        fields = ['ma_nguyen_lieu', 'ten_nguyen_lieu', 'so_luong_ton_kho', 'chi_phi_nguyen_lieu', 'nha_cung_cap']
