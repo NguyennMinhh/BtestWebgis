@@ -1,0 +1,56 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+<style>
+    h1 {
+        text-align: center;
+        margin-top: 20px;
+    }
+    table {
+        border-collapse: collapse;
+        width: 80%;
+        margin: 20px auto;
+        text-align: center;
+        font-size: 16px;
+    }
+    th, td {
+        padding: 10px 15px;
+        border: 1px solid #888;
+    }
+    th {
+        background-color: #f2f2f2;
+    }
+</style>
+
+<h1>Số món đã bán</h1>
+<div style="display: flex; justify-content: center; margin-top: 30px;">
+    <table border="1" style="text-align: center;">
+        <tr>
+            <th>Tên món ăn</th>
+            <th>Số lượng đã bán</th>
+        </tr>
+        {% for ten_mon, so_luong in menu_counts.items %}
+            <tr>
+                <td> {{ ten_mon}} </td>
+                <td> {{ so_luong }} </td>
+        {% endfor %}
+    </table>
+    {{ finished_orders }}
+</div>
+
+<h1>Năng suất của nhân viên</h1>
+<div style="display: flex; justify-content: center; margin-top: 30px;">
+    <table border="1" style="text-align: center;">
+        <tr>
+            <th>Tên nhân viên</th>
+            <th>Số nhiệm vụ đã làm</th>
+        </tr>
+        {% for ho_ten, so_luong_viec_da_lam in staff_productivities.items %}
+            <tr>
+                <td> {{ ho_ten }} </td>
+                <td> {{ so_luong_viec_da_lam }} việc </td>
+        {% endfor %}
+    </table>
+    {{ finished_orders }}
+</div>
+{% endblock %}

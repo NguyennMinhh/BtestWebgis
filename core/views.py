@@ -198,3 +198,45 @@ def show_order_detail(request, order_id):
         'customer': customer,
         'payment': payment
     })
+
+def report(request):
+    # Theo dõi món ăn đã phục vụ:
+    menus = Menu.objects.all()
+    menu_counts = {}
+    for menu in menus:
+        menu_counts[menu.ten_mon] = 0
+    # Demo
+    finished_orders = Order.objects.filter(trang_thai=Order.TypeChoices.COMPLETED).all()
+    for order in finished_orders:
+        order_items = order.items.all()
+        # print(order_items)
+        for order_item in order_items:
+            menu_dish = order_item.menu
+            # print(f'Tên món: {menu_dish.ten_mon}')
+            # print(f'Số món: {order_item.so_luong}')
+            # print('---------------')
+            menu_counts[menu_dish.ten_mon]  += order_item.so_luong
+    sorted_menu_counts = {}
+    for key in sorted(menu_counts, key=menu_counts.get, reverse=True):
+        sorted_menu_counts[key] = menu_counts[key]
+
+    # Theo dõi năng suất của nhân viên:
+    staffs = Staff.objects.all()
+    staff_productivities = {}
+    for staff in staffs:
+        staff_productivities[staff.ho_ten] = 0
+    # Demo 
+    finished_staff_assignments = []
+
+    for order in finished_orders:
+        assignments = StaffAssignment.objects.filter(order=order)
+        finished_staff_assignments.extend(assignments)
+    # print(finished_staff_assignments)
+
+    for staff_assigment in finished_staff_assignments:
+        staff_productivities[staff_assigment.staff.ho_ten] += 1
+
+    return render(request, 'report/report.html', {
+        'menu_counts': sorted_menu_counts,
+        'staff_productivities': staff_productivities,
+    })

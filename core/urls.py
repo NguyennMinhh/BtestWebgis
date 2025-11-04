@@ -20,6 +20,9 @@ urlpatterns = [
     path('order/', views.show_order, name='show_order'),
     path('order/<int:order_id>', views.show_order_detail, name='show_order_detail'),
 
+    # Report
+    path('report/', views.report, name='report'),
+
     # Tính năng
     path('', views.core, name='core'),
     # path('core/create/', views.create, name='create'),
